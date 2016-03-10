@@ -1,0 +1,269 @@
+<!Doctype html>
+<html lang="en">
+<head>
+ <meta charset="utf-8">
+ <title>U-Th-He calculator</title>
+<script src="js/jquery-1.12.0.min.js"></script>
+<script src="js/jquery-ui.min.js"></script>
+<script src="js/handsontable.full.min.js"></script>
+<script src="js/bootstrap-filestyle.min.js"> </script>
+<script src="js/heliodata.js"> </script>
+<script src="js/heliocalc.js"> </script>
+<script src="js/FT.js"> </script>
+<script src="js/helper.js"> </script>
+<script src="js/info.js"> </script>
+<link type="text/css" rel="stylesheet" href="css/handsontable.full.min.css">
+<link type="text/css" rel="stylesheet" href="css/jquery-ui.min.css">
+<style>
+  body {text-align: center; vertical-align: middle; font-family: sans-serif;}
+  div.box {border:1px solid black; display:inline-block; margin:1px;}
+  div.tabbed {display:inline-block;}
+  div.numerator {display:inline-block;}
+  div.handsontable {margin: 0 auto;}
+  /* hack to have same effect as the jquery UI */
+  label.btn.btn-default { padding: .4em 1em; display: block; cursor:pointer; }
+  .tabbed li { font-size: 12pt; }
+  #prefix { padding: .4em 1em; cursor:pointer; font-size: 16pt;}
+  .valign { display:inline-block; vertical-align:middle; }
+  .ui-tabs .ui-tabs-nav { background: lightgrey; border: grey; }
+  #smptable { position:relative; z-index: 1;}
+  #restable { position:relative; z-index: 2;}
+  #habit { position:relative; z-index: 3;}
+</style>
+</head>
+<body>
+
+<!-- beginning of global options -->
+
+<span class="valign">Internal standards:</span>
+<span class="valign">
+<select class="setting" id="onoff">
+  <option>on</option>
+  <option>off</option>
+</select>
+</span>
+<span class="valign">mineral:</span>
+<span class="valign">
+<select class="setting" id="mineral">
+  <option>apatite</option>
+  <option>zircon</option>
+  <option>titanite</option>
+  <option>monazite</option>
+  <option>xenotime</option>
+  <option>rutile</option>
+  <option>magnetite</option>
+  <option>haematite</option>
+  <option>goethite</option>
+  <option>barite</option>
+</select>
+</span>
+<span class="valign">habit:</span>
+<span class="valign">
+<select class="setting" id="habit">
+  <option>ellipsoid</option>
+  <option>cylinder</option>
+  <option>cylinder (inf)</option>
+  <option>tetragonal (0T)</option>
+  <option>tetragonal (1T)</option>
+  <option>tetragonal (2T)</option>
+  <option>tetragonal (inf)</option>
+  <option>hexagonal (0T)</option>
+  <option>hexagonal (1T)</option>
+  <option>hexagonal (2T)</option>
+  <option>hexagonal (inf)</option>
+</select>
+</span>
+<span id="prefixbox" class="valign">
+prefix for the standard solution:
+<input type="text" id="prefix">
+</span>
+</span>
+
+<p></p>
+
+<!-- beginning of the standard solution settings -->
+
+<div class="tabbed" id="standardspec">
+Standard solution
+<ul>
+  <li><a href="#stdCa">Ca</a></li>
+  <li><a href="#stdP">P</a></li>
+  <li><a href="#stdSi">Si</a></li>
+  <li><a href="#stdZr">Zr</a></li>
+  <li><a href="#stdHf">Hf</a></li>
+  <li><a href="#stdSr">Sr</a></li>
+  <li><a href="#stdMn">Mn</a></li>
+  <li><a href="#stdY">Y</a></li>
+  <li><a href="#stdCl">Cl</a></li>
+  <li><a href="#stdSm">Sm</a></li>
+</ul>
+<div id="stdCa">
+  <p>
+    Ca/U = <input class="conc std" type="text" element="Ca"> ppm/ppm <br>
+    isotopes:
+    <input type="radio" name="stdCa" class="isotope std" element="Ca" id=42><sup>42</sup>Ca
+    <input type="radio" name="stdCa" class="isotope std" element="Ca" id=43><sup>43</sup>Ca
+    <input type="radio" name="stdCa" class="isotope std" element="Ca" id=44><sup>44</sup>Ca
+    <input type="radio" name="stdCa" class="isotope std NA" element="Ca">NA
+  </p>
+</div>
+<div id="stdP">
+  <p>
+    P/U = <input class="conc std" type="text" element="P"> ppm/ppm <br>
+    isotopes:
+    <input type="radio" name="stdP" class="isotope std" element="P" id=31><sup>31</sup>P
+    <input type="radio" name="stdP" class="isotope std NA" element="P">NA
+  </p>
+</div>
+<div id="stdSi">
+  <p>
+    Si/U = <input class="conc std" type="text" element="Si"> ppm/ppm <br>
+    isotopes:
+    <input type="radio" name="stdSi" class="isotope std" element="Si" id=29><sup>29</sup>Si
+    <input type="radio" name="stdSi" class="isotope std" element="Si" id=30><sup>30</sup>Si
+    <input type="radio" name="stdSi" class="isotope std NA" element="Si">NA
+  </p>
+</div>
+<div id="stdZr">
+  <p>
+    Zr/U = <input class="conc std" type="text" element="Zr"> ppm/ppm <br>
+    isotopes:
+    <input type="radio" name="stdZr" class="isotope std" element="Zr" id=90><sup>90</sup>Zr
+    <input type="radio" name="stdZr" class="isotope std" element="Zr" id=91><sup>91</sup>Zr
+    <input type="radio" name="stdZr" class="isotope std NA" element="Zr">NA
+  </p>
+</div>
+<div id="stdHf">
+  <p>
+    Hf/U = <input class="conc std" type="text" element="Hf"> ppm/ppm <br>
+    isotopes:
+    <input type="radio" name="stdHf" class="isotope std" element="Hf" id=174><sup>174</sup>Hf
+    <input type="radio" name="stdHf" class="isotope std" element="Hf" id=176><sup>176</sup>Hf
+    <input type="radio" name="stdHf" class="isotope std" element="Hf" id=177><sup>177</sup>Hf<br>
+    <input type="radio" name="stdHf" class="isotope std" element="Hf" id=178><sup>178</sup>Hf
+    <input type="radio" name="stdHf" class="isotope std" element="Hf" id=179><sup>179</sup>Hf
+    <input type="radio" name="stdHf" class="isotope std" element="Hf" id=180><sup>180</sup>Hf
+    <input type="radio" name="stdHf" class="isotope std NA" element="Hf">NA
+  </p>
+</div>
+<div id="stdSr">
+  <p>
+    Sr/U = <input class="conc std" type="text" element="Sr"> ppm/ppm <br>
+    isotopes:
+    <input type="radio" name="stdSr" class="isotope std" element="Sr" id=84><sup>84</sup>Sr
+    <input type="radio" name="stdSr" class="isotope std" element="Sr" id=86><sup>86</sup>Sr
+    <input type="radio" name="stdSr" class="isotope std" element="Sr" id=87><sup>87</sup>Sr
+    <input type="radio" name="stdSr" class="isotope std" element="Sr" id=88><sup>88</sup>Sr
+    <input type="radio" name="stdSr" class="isotope std NA" element="Sr">NA
+  </p>
+</div>
+<div id="stdMn">
+  <p>
+    Mn/U = <input class="conc std" type="text" element="Mn"> ppm/ppm <br>
+    isotopes:
+    <input type="radio" name="stdMn" class="isotope std" element="Mn" id=55><sup>55</sup>Mn
+    <input type="radio" name="stdMn" class="isotope std NA" element="Mn">NA
+  </p>
+</div>
+<div id="stdY">
+  <p>
+    Y/U = <input class="conc std" type="text" element="Y"> ppm/ppm <br>
+    isotopes:
+    <input type="radio" name="stdY" class="isotope std" element="Y" id=89><sup>89</sup>Y
+    <input type="radio" name="stdY" class="isotope std NA" element="Y">NA
+  </p>
+</div>
+<div id="stdCl">
+  <p>
+    Cl/U = <input class="conc std" type="text" element="Cl"> ppm/ppm <br>
+    <input type="radio" name="stdCl" class="isotope std" element="Cl" id=35> <sup>35</sup>Sm
+    <input type="radio" name="stdCl" class="isotope std" element="Cl" id=37> <sup>37</sup>Sm
+    <input type="radio" name="stdCl" class="isotope std NA" element="Cl">NA
+  </p>
+</div>
+<div id="stdSm">
+  <p>
+    Sm/U = <input class="conc std" type="text" element="Sm"> ppm/ppm <br>
+    <input type="radio" name="stdSm" class="isotope std" element="Sm" id=147> <sup>147</sup>Sm
+    <input type="radio" name="stdSm" class="isotope std NA" element="Sm">NA
+  </p>
+</div>
+</div>
+
+<!-- end of the standard solution settings,
+     beginning of the spike solution settings -->
+
+<div class="tabbed" id="spikespec">
+Spike
+<ul>
+  <li><a href="#spkU">U</a></li>
+  <li><a href="#spkTh">Th</a></li>
+  <li><a href="#spkSm">Sm</a></li>
+</ul>
+<div id="spkU">
+  <p>
+    <sup class="numerator" element="U">x</sup>U = <input class="conc spk" type="text" element="U"> pmol/ml,
+    <sup class="numerator" element="U">x</sup>U/<sup>238</sup>U = <input class="ratio" type="text" element="U"><br>
+    isotopes:
+    <input type="radio" name="spkU" class="isotope spk" element="U" id=233><sup>233</sup>U
+    <input type="radio" name="spkU" class="isotope spk" element="U" id=234><sup>234</sup>U
+    <input type="radio" name="spkU" class="isotope spk" element="U" id=235><sup>235</sup>U
+    <input type="radio" name="spkU" class="isotope spk" element="U" id=236><sup>236</sup>U
+    <input type="radio" name="spkU" class="isotope spk NA" element="U">NA
+  </p>
+</div>
+<div id="spkTh">
+  <p>
+    <sup class="numerator" element="Th">x</sup>Th = <input class="conc spk" type="text" element="Th"> nmol/ml,
+    <sup class="numerator" element="Th">x</sup>Th/<sup>232</sup>Th = <input class="ratio" type="text" element="Th"><br>
+    isotopes:
+    <input type="radio" name="spkTh" class="isotope spk" element="Th" id=229><sup>229</sup>Th
+    <input type="radio" name="spkTh" class="isotope spk" element="Th" id=230><sup>230</sup>Th
+    <input type="radio" name="spkTh" class="isotope spk NA" element="Th">NA
+  </p>
+</div>
+<div id="spkSm">
+  <p>
+    <sup class="numerator" element="Sm">x</sup>Sm = <input class="conc spk" type="text" element="Sm"> nmol/ml,
+    <sup class="numerator" element="Sm">x</sup>Sm/<sup>147</sup>Sm = <input class="ratio" type="text" element="Sm"><br>
+    isotopes:
+    <input type="radio" name="spkSm" class="isotope spk" element="Sm" id=144><sup>144</sup>Sm
+    <input type="radio" name="spkSm" class="isotope spk" element="Sm" id=146><sup>146</sup>Sm
+    <input type="radio" name="spkSm" class="isotope spk" element="Sm" id=148><sup>148</sup>Sm
+    <input type="radio" name="spkSm" class="isotope spk" element="Sm" id=149><sup>149</sup>Sm<br>
+    <input type="radio" name="spkSm" class="isotope spk" element="Sm" id=150> <sup>150</sup>Sm
+    <input type="radio" name="spkSm" class="isotope spk" element="Sm" id=152> <sup>152</sup>Sm
+    <input type="radio" name="spkSm" class="isotope spk" element="Sm" id=154> <sup>154</sup>Sm
+    <input type="radio" name="spkSm" class="isotope spk NA" element="Sm">NA
+  </p>
+</div>
+</div>
+
+<!-- end of the spike settings -->
+
+<p>Input:</p>
+<div id="smptable" class="smp handsontable"></div>
+
+<p></p>
+<div id="DEFAULTS">EXAMPLE</div>
+<div id="CLEAR">CLEAR</div>
+<div id="RUN">RUN</div>
+<!-- hacked file upload button -->
+<div class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button">
+  <input id="OPEN" type="file" class="filestyle" data-buttonText="OPEN" data-input="false" data-badge="false" />
+</div>
+<div id="SAVE">SAVE</div>
+<div class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button">
+  <input id="IMPORT" type="file" class="filestyle" data-buttonText="IMPORT" data-input="false" data-badge="false" />
+</div>
+<div id="EXPORT">EXPORT</div>
+<div id="HELIOPLOT">HELIOPLOT</div>
+<div id="HELP">HELP</div>
+<a id="fname" href="" download="data.csv"></a>
+
+<p id="outputlabel">Output:</p>
+<div id="documentation"></div>
+<div id="restable" class="res handsontable"></div>
+
+</body>
+</html>
