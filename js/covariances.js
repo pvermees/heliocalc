@@ -12,7 +12,7 @@ EA = function(dat,Z,z,i){
 EB = function(dat,X,x,i){
     var S = dat.get_S();
     var s = dat.get_s();
-    var err_xsmsm = Math.pow(get_err_yxmsmsp(dat,X,x,S,s,i),2);
+    var err_xsmsm = Math.pow(get_err_yxmsmsp(dat,S,s,X,x,i),2);
     var err_sxmss = get_zxmss(dat,S,s,X,x)[1];
     var out = [[err_xsmsm,0],
 	       [0,err_sxmss]];
@@ -87,7 +87,7 @@ EG = function(dat,i){
 // equation 18
 function get_a(dat,i){
     var u = dat.get_y('U');
-    return get_var_yxmsmsp(dat,'U',u,'U',238,i); // equation 2
+    return get_var_yxmsmsp(dat,'U',238,'U',u,i); // equation 2
 }
 
 // equation 19
@@ -102,7 +102,7 @@ function get_b(dat,Z,z,i){
 
 // equation 20
 function get_c(dat,Z,z,i){
-    return get_var_yxmsmsp(dat,Z,z,'U',238,i); // equation 2
+    return get_var_yxmsmsp(dat,'U',238,Z,z,i); // equation 2
 }
 
 // equation 21
@@ -128,7 +128,7 @@ function get_f(dat,i){
 
 // equation 43
 function get_g(dat,S,s,i){
-    return get_var_yxmsmsp(dat,'Sm',147,S,s,i); // equation 2
+    return get_var_yxmsmsp(dat,S,s,'Sm',147,i); // equation 2
 }
 
 // equation 44

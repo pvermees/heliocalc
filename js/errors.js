@@ -12,17 +12,20 @@ get_err_yxmsmsp = function(dat,X,x,Y,y,i){
 
 // equation 2
 get_var_yxmsmsp = function(dat,X,x,Y,y,i){
-    var n = dat.get_signal(X,x,i); // numerator
-    var d = dat.get_signal(Y,y,i); // denominator
-    var err_n = dat.get_error(X,x,i);
-    var err_d = dat.get_error(Y,y,i);
-    return Math.pow(n/d,2)*(Math.pow(err_n/n,2)+Math.pow(err_d/d,2));
+    var n = dat.get_signal(Y,y,i); // numerator
+    var d = dat.get_signal(X,x,i); // denominator
+    var err_d = dat.get_error(X,x,i);
+    var err_n = dat.get_error(Y,y,i);
+    var variance = Math.pow(n/d,2)*(Math.pow(err_n/n,2)+Math.pow(err_d/d,2));
+    return variance;
 }
 
 // equation 13
 get_err_xesm = function(dat,X,x,i){
     var y = dat.get_y(X);
-    return Math.abs(get_err_yxmsmsp(dat,X,x,X,y,i) * get_dxesm_dyxmsmsp(dat,X,x,y,i));
+    var err_yxmsmsp = get_err_yxmsmsp(dat,X,x,X,y,i);
+    var dxesm_dyxmsmsp = get_dxesm_dyxmsmsp(dat,X,x,y,i);
+    return Math.abs(err_yxmsmsp * dxesm_dyxmsmsp);
 }
 
 // equation 15

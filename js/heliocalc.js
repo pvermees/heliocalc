@@ -296,7 +296,7 @@ $(function(){
 	reader.onload = function(e){
 	    mydata.data.smp = mydata.csv2json(this.result);
 	    mydata.data.std = mydata.crosscheck(mydata.data.std,mydata.data.smp.ICPdat);
-	    setTable(getsmpheaders(),mydata.json2handson(),'#smptable');
+	    setTable(get_smpheaders(),mydata.json2handson(),'#smptable');
 	    setStdTabs();
 	    localStorage.setItem('data',JSON.stringify(mydata.data));
 	}

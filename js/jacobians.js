@@ -216,9 +216,7 @@ get_dCX_du8msmsp = function (dat,X,x,i){
 	var dsesm_du8msmsp = get_dzesm_du8msmsp(dat,S,s,i); // equation 58
 	return dCX_dsesm*dsesm_du8msmsp;
     } else {
-	var mass = dat.get_mass(i)[0];
-	var out = (mass > 0) ? MM(X)/(A(x)*mass) : 0 ;
-	return out;
+	return 0;
     }
 }
 
