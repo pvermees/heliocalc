@@ -1,5 +1,5 @@
 function FT(R,l,w,h,habit) {
-    out = []; 	// U238, U235, Th232, Sm147
+    out = []; 	// Sm147, Th232, U235, U238, 
     var F = 0;
     if (l <= 0) { return [1,1,1,1]; }
     else if (w <= 0) { w = l; }

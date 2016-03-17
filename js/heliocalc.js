@@ -8,8 +8,8 @@ $(function(){
 	setStdTabs();
 	setSpkTabs();
 	showorhide();
-	var smpheaders = getsmpheaders();
-	var resheaders = getresheaders();
+	var smpheaders = get_smpheaders();
+	var resheaders = get_resheaders();
 	setTable(smpheaders,mydata.json2handson(),'#smptable');
 	setTable(resheaders,crunch(),'#restable'); // crunch does all the actual work
 	localStorage.setItem('data',JSON.stringify(mydata.data));
@@ -18,26 +18,40 @@ $(function(){
     function crunch(){
 	var out = [];
 	var names = mydata.names();
-	var issmp, isotope, sname, UsU, ThsTh, SmsSm, He, C;
-	var Ft, t, tstar, smp, mass, Uppm, Thppm, Smppm, eU;
-	var sHe, sFt, st, ststar, smass, sUppm, sThppm,sSmppm;
+	var issmp, sname, UsU, ThsTh, SmsSm, HesHe;
+	var t, Ft, tstar, mass, Uppm, Thppm, Smppm, eU;
+	var covmat_age_eU, err_t, err_tstar, err_eU;
+	var smp;
 	for (var i=0; i<names.length; i++){ // loop through all the ICPMS data
 	    issmp = !mydata.standardson() | (names[i].indexOf(mydata.prefix()) < 0); // smp or std?
 	    if (issmp){
+		// compute output values
 		sname = names[i];
-		UsU = mydata.moles('U',i);
-		ThsTh= mydata.moles('Th',i);
-		SmsSm = mydata.moles('Sm',i);
-		HesHe = mydata.moles('He',i);
-		t = age(UsU[0],ThsTh[0],SmsSm[0],HesHe[0],[1,1,1,1],i);
-		st = err_age(mydata,i,false);
-		Ft = mydata.getFt(i);
-		tstar = age(UsU[0],ThsTh[0],SmsSm[0],HesHe[0],Ft,i);
-		ststar = err_age(mydata,i,true);
+		UsU = mydata.get_moles('U',i);
+		ThsTh= mydata.get_moles('Th',i);
+		SmsSm = mydata.get_moles('Sm',i);
+		HesHe = mydata.get_moles('He',i);
+		t = get_age(UsU[0],ThsTh[0],SmsSm[0],HesHe[0],[1,1,1,1],i);
+		Ft = mydata.get_Ft(i);
+		tstar = get_age(UsU[0],ThsTh[0],SmsSm[0],HesHe[0],Ft,i);
+		mass = mydata.get_mass(i);
+		Uppm = mydata.get_conc('U',i);
+		Thppm = mydata.get_conc('Th',i);
+		eU = Uppm[0] + 0.235*Thppm[0];
+		if (mydata.doSm()){
+		    Smppm = mydata.get_conc('Sm',i);
+		    eU += 0.00121*Smppm[0];
+		}
+		covmat_age_eU = get_covmat_age_eU(mydata,t,[1,1,1,1],i); // uncorrected
+		err_t = Math.sqrt(covmat_age_eU[0][0]);
+		covmat_age_eU = get_covmat_age_eU(mydata,tstar,Ft,i); // corrected
+		err_tstar = Math.sqrt(covmat_age_eU[0][0]);
+		err_eU = Math.sqrt(covmat_age_eU[1][1]);
+		// add output values to array
 		smp = [sname];
 		smp = append(smp,UsU[0],UsU[1]);
-		smp = append(smp,Ft[3],null);
 		smp = append(smp,Ft[2],null);
+		smp = append(smp,Ft[3],null);
 		smp = append(smp,ThsTh[0],ThsTh[1]);
 		smp = append(smp,Ft[1],null);
 		if (mydata.doSm()){
@@ -45,24 +59,16 @@ $(function(){
 		    smp = append(smp,Ft[0],null);
 		}
 		smp = append(smp,HesHe[0],HesHe[1]);
-		smp = append(smp,t,st);
-		smp = append(smp,tstar,ststar);
-		mass = mydata.getMass(i);
+		smp = append(smp,t,err_t);
+		smp = append(smp,tstar,err_tstar);
 		if (mydata.standardson()) { smp = append(smp,mass[0],mass[1]); }
 		else { smp = append(smp,mass[0],null); }
-		Uppm = mydata.getC('U',238,i);
-		Thppm = mydata.getC('Th',232,i);
 		smp = append(smp,Uppm[0],Uppm[1]);
 		smp = append(smp,Thppm[0],Thppm[1]);
-		if (mydata.doSm()){
-		    Smppm = mydata.getC('Sm',147,i);
-		    smp = append(smp,Smppm[0],Smppm[1]); 
-		}
-		eU = mydata.get_eU(i);
-		smp = append(smp,eU[0],eU[1]);
-		if (mydata.standardson()){
-		    smp = mydata.appendConcentrations(smp,i);
-		}
+		if (mydata.doSm()){ smp = append(smp,Smppm[0],Smppm[1]); }
+		smp = append(smp,eU,err_eU);
+		smp = append(smp,cov2cor(covmat_age_eU),null);
+		if (mydata.standardson()){ smp = mydata.appendConcentrations(smp,i); }
 		out.push(smp);
 	    }
 	}
@@ -79,7 +85,7 @@ $(function(){
 	}
     }
     
-    function getresheaders(){ // results
+    function get_resheaders(){ // results
 	var out = ["Name","U [pmol]","&sigma;(U)","F<sub>t</sub>(<sup>235</sup>U)"];
 	out.push("F<sub>t</sub>(<sup>238</sup>U)");
 	out.push("Th [pmol]","&sigma;(Th)","F<sub>t</sub>(<sup>232</sup>Th)");
@@ -90,12 +96,12 @@ $(function(){
 	if (mydata.standardson()) { out.push("&sigma;(mass)") }
 	out.push("U [ppm]","&sigma;(U)","Th [ppm]","&sigma;(Th)");
 	if (mydata.doSm()) {out.push("Sm [ppm]","&sigma;(Sm)");}
-	out.push("eU","&sigma;(eU)");
+	out.push("eU","&sigma;(eU)","&rho;(t*,eU)");
 	if (mydata.standardson()){ out = mydata.appendConcHeaders(out);	}
 	return out;
     }
     
-    function getsmpheaders(){
+    function get_smpheaders(){
 	var out = ["Name","spike [ml]"];
 	out.push("length [&mu;m]","width [&mu;m]","height [&mu;m]");
 	out.push("<sup>4</sup>He [ncc]","&sigma;(<sup>4</sup>He)");

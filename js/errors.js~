@@ -1,0 +1,59 @@
+propagate = function(Jac,Cov){
+    var J = math.matrix(Jac);
+    var E = math.matrix(Cov);
+    var Jt =  math.transpose(J);
+    var EJ = math.multiply(E,J);
+    var out = math.multiply(Jt,EJ);
+    return Math.sqrt(out);
+}
+
+get_err_yxmsmsp = function(dat,X,x,Y,y,i){
+    return Math.sqrt(get_var_yxmsmsp(dat,X,x,Y,y,i));
+}
+
+// equation 2
+get_var_yxmsmsp = function(dat,X,x,Y,y,i){
+    var n = dat.get_signal(X,x,i); // numerator
+    var d = dat.get_signal(Y,y,i); // denominator
+    var err_n = dat.get_error(X,x,i);
+    var err_d = dat.get_error(Y,y,i);
+    return Math.pow(n/d,2)*(Math.pow(err_n/n,2)+Math.pow(err_d/d,2));
+}
+
+// equation 13
+get_err_xesm = function(dat,X,x,i){
+    var y = dat.get_y(X);
+    return Math.abs(get_err_yxmsmsp(dat,X,x,X,y,i) * get_dxesm_dyxmsmsp(dat,X,x,y,i));
+}
+
+// equation 15
+get_err_zesm = function(dat,Z,z,i){
+    var J = JA(dat,Z,z,i);
+    var E = EA(dat,Z,z,i);
+    return propagate(J,E);
+}
+
+get_err_CX = function(dat,S,s,X,x,i){
+    var J = [], E = [];
+    if (dat.inStand(X) & !dat.inSpike(X)){
+	J = JB(dat,S,s,X,x,i);
+	E = EB(dat,S,s,X,x,i);
+    } else if (X === 'U'){
+	J = JC(dat,S,s,i);
+	E = EA(dat,S,s,i);
+    } else if (dat.inSpike(X)){
+	J = JD(dat,S,s,X,x,i);
+	E = ED(dat,S,s,X,x,i);
+    }
+    return propagate(J,E);
+}
+
+get_age_err = function(dat,i,doFt){
+    return 0;
+}
+
+get_covmat_age_eU = function(dat,i){
+    var J = JG(dat,i);
+    var E = EG(dat,i);
+    return propagate(J,E);
+}
