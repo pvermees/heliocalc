@@ -48,7 +48,7 @@ function ppm(mineral,element){
     return gpg(mineral,element)*1e6;
 }
 
-// mol of mineral per mol of a stoichiometric element
+// moles of a stoichiometric element per mol of mineral
 function mpm(element){
     switch (element){
     case 'Ca': return 5;

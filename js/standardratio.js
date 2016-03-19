@@ -7,7 +7,7 @@ get_zxmss = function(dat,ne,ni,de,di){
 }
 
 // used by get_k(dat,i)
-function get_cov_s7mss_8smss(dat,i){
+get_cov_s7mss_8smss = function(dat,i){
     var S = dat.get_S();
     var s = dat.get_s(S);
     var A = get_xss(dat,S,s,i);

@@ -8,7 +8,7 @@ get_conc = function(dat,X,i){
 get_CX = function(dat,X,x,i){
     if (dat.standardson()){
 	var S = dat.get_S();
-	var s = dat.get_s(S);
+	var s = dat.get_s();
 	var CS = ppm(dat.mineral(),S);
 	var xsesm = get_xsesm(dat,X,x,S,s,i);
 	return (MM(X)*A(s)*xsesm*CS)/(MM(S)*A(x));

@@ -33,7 +33,6 @@ get_xesm = function(dat,X,x,i){
 }
 
 get_zesm = function(dat,Z,z,i){
-    var u = dat.get_y('U');
     var U8esm = get_xesm(dat,'U',238,i);
     var utsp = dat.get_ytsp('U',i);
     var U8utsp = 1/dat.get_yxtsp('U');

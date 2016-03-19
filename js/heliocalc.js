@@ -232,8 +232,8 @@ $(function(){
     }
     
     function loadDefaults(){
-	if ($("#onoff").val() === "on"){ readJSON('./standardson.json'); } 
-	else { readJSON('./standardsoff.json'); }
+	if ($("#onoff").val() === "on"){ readJSON('./data/standardson.json'); } 
+	else { readJSON('./data/standardsoff.json'); }
     }
     
     function run(){

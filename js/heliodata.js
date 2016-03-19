@@ -136,7 +136,7 @@ var heliodata = function(data){
 	var Xconc = 1, Yconc = 1;
 	if (X !== 'U') { Xconc = this.data.std[X].conc; }
 	if (Z !== 'U') { Zconc = this.data.std[Z].conc; }
-	return (A(z)*Zconc)/(A(x)*Xconc);
+	return (A(z)*MM(X)*Zconc)/(A(x)*MM(Z)*Xconc);
     }
 
     // returns mean and variance of standard solution ratios
@@ -155,25 +155,24 @@ var heliodata = function(data){
 
     // get the volume of the ith grain, in um^3
     this.get_vol = function(i){
+    }
+
+    // get the mass of the ith grain, in ug
+    this.get_mass = function(i){
+	var m = 0, err_m = 0;
 	if (this.standardson()){
 	    var S = this.get_S();
 	    var s = this.get_s();
 	    var As = A(s);
 	    var sesm = get_zesm(this,S,s,i);
 	    var err_sesm = get_err_zesm(this,S,s,i);
-	    var V = sesm/(As*gpg(this.mineral(),S));
-	    var err_V = err_sesm/(As*gpg(this.mineral(),S));
-	    return [V,err_V];
+	    var Mm = MM(this.mineral());
+	    m = sesm*Mm/(mpm(S)*As*1000000);
+	    err_m = err_sesm*Mm/(mpm(S)*As*1000000);
 	} else {
-	    return [VOL(this.length(i),this.width(i),this.height(i),this.habit()),0];
+	    var V = VOL(this.length(i),this.width(i),this.height(i),this.habit()); // in um^3
+	    m = V * this.dens() / 1e6; // mass in ug
 	}
-    }
-
-    // get the mass of the ith grain, in ug
-    this.get_mass = function(i){
-	var V = this.get_vol(i); // in um^3
-	var m = V[0] * this.dens() / 1e6; // mass in ug
-	var err_m = V[1] * this.dens() / 1e6; // mass in ug
 	return [m, err_m];
     }
 

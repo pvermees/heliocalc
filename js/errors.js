@@ -11,7 +11,7 @@ get_err_yxmsmsp = function(dat,X,x,Y,y,i){
 }
 
 // equation 2
-get_var_yxmsmsp = function(dat,X,x,Y,y,i){
+get_var_yxmsmsp = function(dat,Y,y,X,x,i){
     var n = dat.get_signal(Y,y,i); // numerator
     var d = dat.get_signal(X,x,i); // denominator
     var err_d = dat.get_error(X,x,i);
@@ -23,7 +23,7 @@ get_var_yxmsmsp = function(dat,X,x,Y,y,i){
 // equation 13
 get_err_xesm = function(dat,X,x,i){
     var y = dat.get_y(X);
-    var err_yxmsmsp = get_err_yxmsmsp(dat,X,x,X,y,i);
+    var err_yxmsmsp = get_err_yxmsmsp(dat,X,y,X,x,i);
     var dxesm_dyxmsmsp = get_dxesm_dyxmsmsp(dat,X,x,y,i);
     return Math.abs(err_yxmsmsp * dxesm_dyxmsmsp);
 }
