@@ -17,30 +17,44 @@ function density(mineral){
 // get Molar Mass of an element or mineral
 function MM(stuff){
     switch (stuff){
+    case 'H' : return 1.008;
     case 'O' : return 15.999;
     case 'F' : return 18.9984;
     case 'P' : return 30.973762;
     case 'Cl': return 35.45;
     case 'Ca': return 40.078;
+    case 'Ti': return 47.867;
     case 'Si': return 28.0855;
+    case 'S' : return 32.06;
     case 'Mn': return 54.9380443;
+    case 'Fe': return 55.845;
     case 'Sr': return 87.621;
     case 'Y' : return 88.905842;
     case 'Zr': return 91.224;
+    case 'Ba': return 137.327;
+    case 'La': return 138.90547;
+    case 'Ce': return 140.116;
     case 'Sm': return 150.36;
     case 'Hf': return 178.492;
     case 'Th': return 232.03806;
     case 'U': return 238.02891;
     case 'apatite': return 5*MM('Ca')+3*MM('P')+12*MM('O')+MM('F');
     case 'zircon' : return MM('Zr')+MM('Si')+4*MM('O');
-    case 'titanite' : return null; //TODO
+    case 'titanite' : return MM('Ca')+MM('Ti')+MM('Si')+5*MM('O');
+    case 'monazite' : return MM('Ce')/2+MM('La')/2+MM('P')+4*MM('O');
+    case 'xenotime' : return MM('Y')+MM('P')+4*MM('O');
+    case 'rutile' : return MM('Ti')+2*MM('O');
+    case 'magnetite' : return 3*MM('Fe')+4*MM('O');
+    case 'haematite' : return 2*MM('Fe')+3*MM('O');
+    case 'goethite' : return MM('Fe')+2*MM('O')+MM('H');
+    case 'barite' : return MM('Ba')+MM('S')+4*MM('O');
     default: return 0;
     }
 }
 
 // gramme of stoichiometric element per gramme of mineral
 function gpg(mineral,element){
-    var out = mpm(element)*MM(element)/MM(mineral);
+    var out = mpm(element,mineral)*MM(element)/MM(mineral);
     return out;
 }
 
@@ -49,12 +63,44 @@ function ppm(mineral,element){
 }
 
 // moles of a stoichiometric element per mol of mineral
-function mpm(element){
+function mpm(element,mineral){
     switch (element){
-    case 'Ca': return 5;
-    case 'P': return 3;
-    case 'Si': return 1;
-    case 'Zr': return 1;
+    case 'Ca':
+	switch (mineral){
+	case 'apatite': return 5;
+	case 'titanite': return 1;
+	default: return 0;
+	}
+    case 'P':
+	switch (mineral){
+	case 'apatite': return 3;
+	case 'monazite': return 1;
+	case 'xenotime': return 1;
+	default: return 0;
+	}
+    case 'Si':
+	switch (mineral){
+	case 'zircon': return 1;
+	case 'titanite': return 1;
+	default: return 0;
+	}
+    case 'Zr':
+	switch (mineral){
+	case 'zircon': return 1;
+	default: return 0;
+	}
+    case 'Fe':
+	switch (mineral){
+	case 'magnetite': return 3;
+	case 'haematite': return 2;
+	case 'goethite': return 1;
+	default: return 0;
+	}
+    case 'Ba':
+	switch (mineral){
+	case 'barite': return 1;
+	default: return 0;
+	}
     default: return 0;
     }
 }

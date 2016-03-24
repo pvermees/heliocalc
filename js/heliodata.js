@@ -22,6 +22,51 @@ var heliodata = function(data){
 
     this.habit = function(){ return this.data.settings.habit; }
 
+    // get the internal standard
+    this.get_S = function(){
+	var S;
+	switch (this.mineral()){
+	case 'apatite': 
+	    if (this.inStand('Ca')) { S = 'Ca'; }
+	    if (this.inStand('P')) { S = 'P'; }
+	    break;
+	case 'zircon' :
+	    if (this.inStand('Si')) { S = 'Si'; }
+	    if (this.inStand('Zr')) { S = 'Zr'; }
+	    break;
+	case 'titanite' :
+	    if (this.inStand('Ti')) { S = 'Ti'; }
+	    if (this.inStand('Si')) { S = 'Si'; }
+	    break;
+	case 'monazite' :
+	    if (this.inStand('P')) { S = 'P'; }
+	    break;
+	case 'xenotime' :
+	    if (this.inStand('Y')) { S = 'Y'; }
+	    if (this.inStand('P')) { S = 'P'; }
+	    break;
+	case 'rutile' :
+	    if (this.inStand('Ti')) { S = 'Ti'; }
+	    break;
+	case 'magnetite' :
+	case 'haematite' :
+	case 'goethite' :
+	    if (this.inStand('Fe')) { S = 'Fe'; }
+	    break;
+	case 'barite' : 
+	    if (this.inStand('Ba')) { S = 'Ba'; }
+	    if (this.inStand('S')) { S = 'S'; }
+	    break;
+	default: S = 'none';
+	}
+	if (S === 'none'){
+	    this.data.settings.standardson = $("#onoff").val('off');
+	    refresh();
+	} else {
+	    return S;
+	}
+    }
+
     this.length = function(i){ 
 	var l = this.data.smp.length[i];
 	if ($.isNumeric(l)) {
@@ -46,15 +91,6 @@ var heliodata = function(data){
 	    return Number(h);
 	} else {
 	    return 0;
-	}
-    }
-
-    // get the internal standard
-    this.get_S = function(){
-	switch (this.mineral()) {
-	case "apatite": return 'Ca';
-	case "zircon": return 'Si';
-	default: return 'Ca';
 	}
     }
 
@@ -163,12 +199,13 @@ var heliodata = function(data){
 	if (this.standardson()){
 	    var S = this.get_S();
 	    var s = this.get_s();
+	    var MPM = mpm(S,this.mineral());
 	    var As = A(s);
 	    var sesm = get_zesm(this,S,s,i);
 	    var err_sesm = get_err_zesm(this,S,s,i);
 	    var Mm = MM(this.mineral());
-	    m = sesm*Mm/(mpm(S)*As*1000000);
-	    err_m = err_sesm*Mm/(mpm(S)*As*1000000);
+	    m = sesm*Mm/(MPM*As*1000000);
+	    err_m = err_sesm*Mm/(MPM*As*1000000);
 	} else {
 	    var V = VOL(this.length(i),this.width(i),this.height(i),this.habit()); // in um^3
 	    m = V * this.dens() / 1e6; // mass in ug

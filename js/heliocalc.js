@@ -398,6 +398,9 @@ $(function(){
     } else {
 	refresh();
     }
+
+    $("#smptable").resizable();
+    $("#restable").resizable();
     
 });
 

@@ -103,7 +103,7 @@ function VOL(l,w,h,habit){
     if (h <= 0) { h = w; }
     switch (habit){
     case "ellipsoid":
-	return VOL_ellipsoid(l);
+	return VOL_ellipsoid(l/2,w/2,h/2);
     case "cylinder":
 	return VOL_cylinder(l,w,h);
     case "cylinder (inf)":
@@ -133,9 +133,8 @@ function VOL_ellipsoid(c,b,a){
 }
 
 function VOL_cylinder(l,w,h){
-    var h = l;
-    var r = Math.sqrt(w*h/Math.PI);
-    return Math.PI*r*r*h;
+    var r = Math.sqrt(w*h/4);
+    return Math.PI*r*r*l;
 }
 
 function VOL_tetragonal(c,b,a,Np){
