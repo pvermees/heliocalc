@@ -84,6 +84,30 @@ EG = function(dat,i){
     return out;
 }
 
+EH = function(dat,i){
+    var S, s;
+    var a = get_a(dat,i);
+    if (dat.standardson()){
+	S = dat.get_S();
+	s = dat.get_s();
+    }
+    var b7 = 0;
+    var c7 = 0;
+    if (dat.doSm()){
+	b7 = get_b(dat,'Sm',147,i);
+	c7 = get_c(dat,'Sm',147,i);
+    }
+    var e = get_e(dat,i);
+    var f = get_f(dat,i);
+    var l = get_l(dat,i);
+    var out = [[a ,0,0,b7,0],
+	       [0 ,e,0,0 ,0],
+	       [0 ,0,f,0 ,0],
+	       [b7,0,0,c7,0],
+	       [0 ,0,0,0 ,l]];
+    return out;
+}
+
 // equation 18
 function get_a(dat,i){
     var u = dat.get_y('U');

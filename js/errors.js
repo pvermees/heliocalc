@@ -57,6 +57,13 @@ get_err_CX = function(dat,X,x,i){
     return Math.sqrt(V);
 }
 
+get_err_age_radialplotter = function(dat,t,Ft,i){
+    var J = JH(dat,t,Ft,i);
+    var E = EH(dat,i);
+    var V = propagate(J,E);
+    return Math.sqrt(V);
+}
+
 get_covmat_age_eU = function(dat,t,Ft,i){
     var J = JG(dat,t,Ft,i);
     var E = EG(dat,i);

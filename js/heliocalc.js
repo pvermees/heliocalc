@@ -153,6 +153,31 @@ $(function(){
 	}
 	return encodeURIComponent(out);
     }
+
+    function export2radialplotter(fname,doSm){
+	var tstar, err_tstar, issmp, UsU, ThsTh, SmsSm, HesHe, tstar;
+	var out=fname.replace(/.csv/,'')+',O\n';
+	var names = mydata.names();
+	for (var i=0; i<names.length; i++){ // loop through all the ICPMS data
+	    issmp = !mydata.standardson() | (names[i].indexOf(mydata.prefix()) < 0); // smp or std?
+	    if (issmp){
+		UsU = mydata.get_moles('U',i);
+		ThsTh= mydata.get_moles('Th',i);
+		SmsSm = mydata.get_moles('Sm',i);
+		HesHe = mydata.get_moles('He',i);
+		Ft = mydata.get_Ft(i);
+		tstar = get_age(UsU[0],ThsTh[0],SmsSm[0],HesHe[0],Ft,i);
+		err_tstar = get_err_age_radialplotter(mydata,tstar,Ft,i);	
+		if (tstar>0){
+		    out += tstar;
+		    out += ',';
+		    out += err_tstar;
+		    out += '\n';
+		}
+	    }
+	}
+	return encodeURIComponent(out);
+    }
     
     function export2csv(){
 	var header = $("#restable").handsontable('getColHeader');
@@ -331,6 +356,15 @@ $(function(){
 	var fname = prompt("Please enter a file name", "helioplot.csv");
 	if (fname != null){
 	    $('#fname').attr("href","data:text/plain," + export2helioplot(fname,mydata.doSm()));
+	    $('#fname').attr("download",fname);
+	    $('#fname')[0].click();
+	}
+    });
+
+    $("#RADIALPLOTTER").button().click(function( event ) {
+	var fname = prompt("Please enter a file name", "radialplotter.csv");
+	if (fname != null){
+	    $('#fname').attr("href","data:text/plain," + export2radialplotter(fname,mydata.doSm()));
 	    $('#fname').attr("download",fname);
 	    $('#fname')[0].click();
 	}

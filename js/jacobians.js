@@ -53,6 +53,17 @@ JG = function(dat,t,Ft,i){
     return J;
 }
 
+// used for age uncertainty of radialplotter input
+JH = function(dat,t,Ft,i){
+    var dt_du8msmsp = get_dt_du8msmsp(dat,t,Ft,i);
+    var dt_dv2msmsp = get_dt_dv2msmsp(dat,t,Ft,i);
+    var dt_dw7msmsp = get_dt_dw7msmsp(dat,t,Ft,i);
+    var dt_d78msmsp = get_dt_d78msmsp(dat,t,Ft,i);
+    var dt_d4esm = get_dt_d4esm(dat,t,Ft,i);
+    var J = [[dt_du8msmsp],[dt_dv2msmsp],[dt_dw7msmsp],[dt_d78msmsp],[dt_d4esm]];
+    return J;
+}
+
 get_dt_du8msmsp = function(dat,t,Ft,i){
     var dD_du8msmsp = get_dD_du8msmsp(dat,t,Ft,i); // equation 85
     var dD_dt = get_dD_dt(dat,t,Ft,i); // equation 80
