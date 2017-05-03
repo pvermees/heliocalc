@@ -251,8 +251,9 @@ $(function(){
 	$(theID).handsontable({
 	    colHeaders: headers,
 	    data: data,
-	    stretchH: 'all',
-	    width: 1200
+	    contextMenu: true,
+	    observeChanges: true,
+	    manualColumnResize: true,
 	});
     }
     

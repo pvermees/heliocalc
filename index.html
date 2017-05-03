@@ -24,6 +24,7 @@
 <link type="text/css" rel="stylesheet" href="css/jquery-ui.min.css">
 <style>
   body {text-align: center; vertical-align: middle; font-family: sans-serif;}
+  div.main {width:1300px; margin-left:auto; margin-right:auto;}
   div.box {border:1px solid black; display:inline-block; margin:1px;}
   div.tabbed {display:inline-block;}
   div.numerator {display:inline-block;}
@@ -41,7 +42,8 @@
 </style>
 </head>
 <body>
-
+<div class="main">
+  
 <!-- beginning of global options -->
 
 <span class="valign">Internal standards:</span>
@@ -223,7 +225,7 @@ Spike
 </div>
 <div id="spkTh">
   <p>
-    <sup class="numerator" element="Th">x</sup>Th = <input class="conc spk" type="text" element="Th"> nmol/ml,
+    <sup class="numerator" element="Th">x</sup>Th = <input class="conc spk" type="text" element="Th"> pmol/ml,
     <sup class="numerator" element="Th">x</sup>Th/<sup>232</sup>Th = <input class="ratio" type="text" element="Th"><br>
     isotopes:
     <input type="radio" name="spkTh" class="isotope spk" element="Th" id=229><sup>229</sup>Th
@@ -233,7 +235,7 @@ Spike
 </div>
 <div id="spkSm">
   <p>
-    <sup class="numerator" element="Sm">x</sup>Sm = <input class="conc spk" type="text" element="Sm"> nmol/ml,
+    <sup class="numerator" element="Sm">x</sup>Sm = <input class="conc spk" type="text" element="Sm"> pmol/ml,
     <sup class="numerator" element="Sm">x</sup>Sm/<sup>147</sup>Sm = <input class="ratio" type="text" element="Sm"><br>
     isotopes:
     <input type="radio" name="spkSm" class="isotope spk" element="Sm" id=144><sup>144</sup>Sm
@@ -275,5 +277,6 @@ Spike
 <div id="documentation" class="centered"></div>
 <div id="restable" class="res handsontable"></div>
 
+</div>
 </body>
 </html>
