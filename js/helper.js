@@ -43,14 +43,10 @@ function append(smp,x,sx){
 	var numdig = 0;
 	if (lsx < 1) { numdig = lx - lsx + extradig; }
 	out.push(x.toFixed(numdig),sx.toFixed(numdig));
-    } else if (x == 0 & sx === null) {
-	out.push('');
-    } else if (x == 0 & sx == 0) {
-	out.push('','');
-    } else if (x != 0 & sx === null) {
+    } else if (sx === null) {
 	out.push(x.toFixed(3)); 
-    } else if (sx <= 0) {
-	out.push(x,sx);
+    } else {
+	out.push('','');
     }
     return out;
 }
